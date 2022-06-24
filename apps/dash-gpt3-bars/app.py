@@ -25,9 +25,39 @@ openai.api_key = os.getenv("OPENAI_KEY")
 
 
 # Define the prompt
-desc = "Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than the number of giraffes we have."
-code_exp = "px.bar(x=['giraffes', 'orangutans', 'monkeys'], y=[20, 14, 23], labels=dict(x='animals', y='count'), title='Our Zoo')"
-formatted_exp = black.format_str(code_exp, mode=black.FileMode(line_length=50))
+# desc = "Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than the number of giraffes we have."
+# code_exp = "px.bar(x=['giraffes', 'orangutans', 'monkeys'], y=[20, 14, 23], labels=dict(x='animals', y='count'), title='Our Zoo')"
+# formatted_exp = black.format_str(code_exp, mode=black.FileMode(line_length=50))
+
+desc = \
+    """
+    Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than 
+    the number of giraffes we have. Make color of giraffe bar yellow and orangutan bar green.
+    """
+# code_exp = \
+#     """
+#     # df = pd.DataFrame({'animals' : ['giraffes', 'orangutans', 'monkeys'], 'count' : [20, 14, 23], 'color' : ['yellow', 'green', 'blue']})
+#     df['animals'] = ['giraffes', 'orangutans', 'monkeys']
+#     df['count'] = [20, 14, 23]
+#     df['color'] = ['yellow', 'green', 'blue']
+    
+#     # fig = px.bar(x=['giraffes', 'orangutans', 'monkeys'], 
+#     #         y=[20, 14, 23], 
+#     #         labels=dict(x='animals', y='count'), 
+#     #         color=['yellow', 'green', 'blue'],
+#     #         color_discrete_map='identity',
+#     #         title='Our Zoo')
+    
+#     fig = px.bar(data_frame=df, x='animals', y='count', labels=dict(x='animals', y='count'), color='color', title='Our Zoo')
+#     """
+# code_exp = "df = pd.DataFrame({'animals' : ['giraffes', 'orangutans', 'monkeys'], 'count' : [20, 14, 23], 'color' : ['yellow', 'green', 'blue']})\nfig = px.bar(data_frame=df, x='animals', y='count', labels=dict(x='animals', y='count'), color='color', title='Our Zoo')"
+code_exp = "px.bar(x=['giraffes', 'orangutans', 'monkeys'], y=[320, 14, 23], labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue'], color_discrete_map = 'identity', title='Our Zoo')"
+formatted_exp = black.format_str(code_exp, mode=black.FileMode(line_length=10000))
+
+# descs = ['Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than the number of giraffes we have.',
+#          'Make giraffe bar yellow, orangutan bar orange, and monkey bar brown.']
+
+# code_exps = ''
 
 # Create
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -123,13 +153,14 @@ def generate_graph(n_clicks, n_submit, text):
     )
     output = response.choices[0].text.strip()
 
-    code = f"import plotly.express as px\nfig = {output}\nfig.show()"
-    formatted = black.format_str(code, mode=black.FileMode(line_length=50))
+    code = f"import plotly.express as px\nfig={output}\nfig.show()"
+    formatted = black.format_str(code, mode=black.FileMode(line_length=10000))
 
     try:
         fig = eval(output).update_layout(margin=dict(l=35, r=35, t=35, b=35))
     except Exception as e:
         fig = px.line(title=f"Exception: {e}. Please try again!")
+        print(f'{formatted}')
 
     return fig, f"```\n{formatted}\n```"
 
