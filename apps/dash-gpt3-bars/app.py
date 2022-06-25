@@ -32,7 +32,7 @@ openai.api_key = os.getenv("OPENAI_KEY")
 desc = \
     """
     Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than 
-    the number of giraffes we have. Make color of giraffe bar yellow and orangutan bar green.
+    the number of giraffes we have and 12 zebras. Make color of giraffe bar yellow and orangutan bar green.
     """
 # code_exp = \
 #     """
@@ -51,13 +51,73 @@ desc = \
 #     fig = px.bar(data_frame=df, x='animals', y='count', labels=dict(x='animals', y='count'), color='color', title='Our Zoo')
 #     """
 # code_exp = "df = pd.DataFrame({'animals' : ['giraffes', 'orangutans', 'monkeys'], 'count' : [20, 14, 23], 'color' : ['yellow', 'green', 'blue']})\nfig = px.bar(data_frame=df, x='animals', y='count', labels=dict(x='animals', y='count'), color='color', title='Our Zoo')"
-code_exp = "px.bar(x=['giraffes', 'orangutans', 'monkeys'], y=[320, 14, 23], labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue'], color_discrete_map = 'identity', title='Our Zoo')"
+code_exp = "px.bar(x=['giraffes', 'orangutans', 'monkeys', 'zebras'], y=[320, 14, 23, 12], labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue', 'blue'], color_discrete_map = 'identity', title='Our Zoo')"
 formatted_exp = black.format_str(code_exp, mode=black.FileMode(line_length=10000))
 
-# descs = ['Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than the number of giraffes we have.',
-#          'Make giraffe bar yellow, orangutan bar orange, and monkey bar brown.']
+descs = ['Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than the number of giraffes we have and 12 zebras. Make color of giraffe bar yellow and orangutan bar green.',
+         'Sales were at $100 on Monday and have increased by 30 dollar every day this week.',
+         'Create a bar chart with 6 bars with values of 10, 20, 60, 3, twenty-five, and seventy sorted ascending by value.',
+         'Make a bar graph with values of 10, 20, 60, 3, twenty-five, and seventy sorted descending by value.'
+         ]
+code_exps = ["""
+             px.bar(x=['giraffes', 'orangutans', 'monkeys', 'zebras'], y=[320, 14, 323, 12], labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue', 'blue'], color_discrete_map = 'identity', title='Our Zoo')
+             """,
+             """             
+             px.bar(x=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], y=[100, 130, 160, 190, 220], labels=dict(x='Day', y='Dollars'), title='Sales')
+             """,
+             """
+             px.bar(y=[3, 10, 20, 25, 60, 70], labels=dict(x='', y='Value'))
+             """,
+             """
+             px.bar(y=[70, 60, 25, 20, 10, 3], labels=dict(x='', y='Value'))
+             """
+             ]
+# code_exps = ["""
+#              df = pd.DataFrame()
+#              df['animals'] = ['giraffes', 'orangutans', 'monkeys', 'zebras']
+#              df['count'] = [320, 14, 23, 12]
+#              fig = px.bar(data_frame = df, x='animals', y='count', labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue', 'blue'], color_discrete_map = 'identity', title='Our Zoo')
+#              """,
+#              """
+#              df = pd.DataFrame()
+#              df['Day'] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+#              df['Dollars'] = [100, 130, 160, 190, 220]
+             
+#              fig = px.bar(data_frame = df, x='Day', y='Dollars', labels=dict(x='Day', y='Dollars'), title='Sales')
+#              """,
+#              """
+#              df = pd.DataFrame()
+#              df['Value'] = [3, 10, 20, 25, 60, 70]
+             
+#              fig = px.bar(data_frame = df, y='Value', labels=dict(x='', y='Value'))
+#              """,
+#              """
+#              df = pd.DataFrame()
+#              df['Value'] = [10, 20, 60, 3, 25, 70]
+             
+#              df.sort_values('Value', ascending = False, inplace = True)
+#              fig = px.bar(data_frame = df, y='Value', labels=dict(x='', y='Value'))
+             
+#              """,
+#              "px.bar(y=['giraffes', 'orangutans', 'monkeys', 'zebras'], x=[320, 14, 23, 12], labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue', 'blue'], color_discrete_map = 'identity', orientation = 'h', title='Our Zoo')",
+#              """
+#              df = pd.DataFrame()
+#              df['animals'] = ['giraffes', 'orangutans', 'monkeys', 'zebras']
+#              df['count'] = [320, 14, 23, 12]
+#              df['colors'] = ['yellow', 'green', 'blue', 'blue']
+             
+#              px.bar(y='animals', x='count', labels=dict(x='animals', y='count'), color = 'colors', color_discrete_map = 'identity', orientation = 'h', title='Our Zoo')
+#              """,
+#              """
+#              df = pd.DataFrame()
+#              df['animals'] = ['giraffes', 'orangutans', 'monkeys', 'zebras']
+#              df['count'] = [320, 14, 23, 12]
+#              df['colors'] = ['yellow', 'green', 'blue', 'blue']
+             
+#              px.bar(y='animals', x='count', labels=dict(x='animals', y='count'), color = 'colors', color_discrete_map = 'identity', orientation = 'v', title='Our Zoo')
+#              """]
 
-# code_exps = ''
+# formatted_exps = [black.format_str(code, mode=black.FileMode(line_length=10000)) for code in code_exps]
 
 # Create
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -134,22 +194,23 @@ def generate_graph(n_clicks, n_submit, text):
         return dash.no_update, dash.no_update
 
     prompt = dedent(
-        f"""
-        description: {desc}
-        code:
-        {code_exp}
+        # f"""
+        # description: {desc}
+        # code:
+        # {code_exp}
 
-        description: {text}
-        code:
-        """
+        # description: {text}
+        # code:
+        # """
+        '\n'.join([f'description: {desc}\ncode:\n{code}\n' for desc, code in zip(descs, code_exps)]) + f'description: {text}\ncode: '
     ).strip("\n")
 
     response = openai.Completion.create(
         engine="davinci",
         prompt=prompt,
-        max_tokens=100,
+        max_tokens=1000,
         stop=["description:", "code:"],
-        temperature=0,
+        temperature=0
     )
     output = response.choices[0].text.strip()
 
