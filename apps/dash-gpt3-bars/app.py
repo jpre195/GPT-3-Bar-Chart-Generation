@@ -54,22 +54,22 @@ desc = \
 code_exp = "px.bar(x=['giraffes', 'orangutans', 'monkeys', 'zebras'], y=[320, 14, 23, 12], labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue', 'blue'], color_discrete_map = 'identity', title='Our Zoo')"
 formatted_exp = black.format_str(code_exp, mode=black.FileMode(line_length=10000))
 
-descs = ['Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than the number of giraffes we have and 12 zebras. Make color of giraffe bar yellow and orangutan bar green.',
-         'Sales were at $100 on Monday and have increased by 30 dollar every day this week.',
-         'Create a bar chart with 6 bars with values of 10, 20, 60, 3, twenty-five, and seventy sorted ascending by value.',
-         'Make a bar graph with values of 10, 20, 60, 3, twenty-five, and seventy sorted descending by value.'
+descs = ['Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than the number of giraffes we have and 12 zebras. Make color of giraffe bar yellow and orangutan bar green. Y-axis ranges from 10 to 400',
+         'Sales were at $100 on Monday and have increased by 30 dollars every day this week.',
+         'Create a bar chart with values 10, 3, twenty-five, and seventy sorted descending by value. X-axis should range from 0 to 100',
+         'DisneyLands FY17 earnings was at 20000. They have increased 15000 every year since. Make a horizontal bar graph'
          ]
 code_exps = ["""
-             px.bar(x=['giraffes', 'orangutans', 'monkeys', 'zebras'], y=[320, 14, 323, 12], labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue', 'blue'], color_discrete_map = 'identity', title='Our Zoo')
-             """,
-             """             
-             px.bar(x=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], y=[100, 130, 160, 190, 220], labels=dict(x='Day', y='Dollars'), title='Sales')
+             px.bar(x=['giraffes', 'orangutans', 'monkeys', 'zebras'], y=[320, 14, 323, 12], labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue', 'blue'], color_discrete_map = 'identity', title='Our Zoo', text = [320, 14, 323, 12], range_y = [10, 400])
              """,
              """
-             px.bar(y=[3, 10, 20, 25, 60, 70], labels=dict(x='', y='Value'))
+             px.bar(x=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], y=[100, 100 + 1 * 30, 100 + 2 * 30, 100 + 3 * 30, 100 + 4 * 30], labels=dict(x='Day', y='Dollars'), color = ['blue', 'blue', 'blue', 'blue', 'blue'], color_discrete_map = 'identity', title='Sales', text = [100, 100 + 1 * 30, 100 + 2 * 30, 100 + 3 * 30, 100 + 4 * 30])
              """,
              """
-             px.bar(y=[70, 60, 25, 20, 10, 3], labels=dict(x='', y='Value'))
+             px.bar(y=sorted([10, 3, 25, 70], reverse = True), color = ['blue', 'blue', 'blue', 'blue'], color_discrete_map = 'identity',  labels=dict(x='', y='Value', text = sorted([10, 3, 25, 70], reverse = True)), range_x = [0, 100])
+             """,
+             """
+             px.bar(x = [20000, 20000 + 1 * 15000, 20000 + 2 * 15000, 20000 + 3 * 15000, 20000 + 4 * 15000], y=['FY17', 'FY18', 'FY19', 'FY20', 'FY21'], labels=dict(x='Earnings', y='FY'), orientation = 'h', title = 'Disneyland earnings', text = [20000, 20000 + 1 * 15000, 20000 + 2 * 15000, 20000 + 3 * 15000, 20000 + 4 * 15000])
              """
              ]
 # code_exps = ["""
