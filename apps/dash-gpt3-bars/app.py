@@ -25,99 +25,47 @@ openai.api_key = os.getenv("OPENAI_KEY")
 
 
 # Define the prompt
-# desc = "Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than the number of giraffes we have."
-# code_exp = "px.bar(x=['giraffes', 'orangutans', 'monkeys'], y=[20, 14, 23], labels=dict(x='animals', y='count'), title='Our Zoo')"
-# formatted_exp = black.format_str(code_exp, mode=black.FileMode(line_length=50))
-
 desc = \
     """
     Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than 
-    the number of giraffes we have and 12 zebras. Make color of giraffe bar yellow and orangutan bar green.
+    the number of giraffes we have and 12 zebras.
     """
-# code_exp = \
-#     """
-#     # df = pd.DataFrame({'animals' : ['giraffes', 'orangutans', 'monkeys'], 'count' : [20, 14, 23], 'color' : ['yellow', 'green', 'blue']})
-#     df['animals'] = ['giraffes', 'orangutans', 'monkeys']
-#     df['count'] = [20, 14, 23]
-#     df['color'] = ['yellow', 'green', 'blue']
-    
-#     # fig = px.bar(x=['giraffes', 'orangutans', 'monkeys'], 
-#     #         y=[20, 14, 23], 
-#     #         labels=dict(x='animals', y='count'), 
-#     #         color=['yellow', 'green', 'blue'],
-#     #         color_discrete_map='identity',
-#     #         title='Our Zoo')
-    
-#     fig = px.bar(data_frame=df, x='animals', y='count', labels=dict(x='animals', y='count'), color='color', title='Our Zoo')
-#     """
-# code_exp = "df = pd.DataFrame({'animals' : ['giraffes', 'orangutans', 'monkeys'], 'count' : [20, 14, 23], 'color' : ['yellow', 'green', 'blue']})\nfig = px.bar(data_frame=df, x='animals', y='count', labels=dict(x='animals', y='count'), color='color', title='Our Zoo')"
-code_exp = "px.bar(x=['giraffes', 'orangutans', 'monkeys', 'zebras'], y=[320, 14, 23, 12], labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue', 'blue'], color_discrete_map = 'identity', title='Our Zoo')"
+
+code_exp = "px.bar(x=['giraffes', 'orangutans', 'monkeys', 'zebras'], y=[320, 14, 23, 12], labels=dict(x='animals', y='count'), title='Our Zoo')"
 formatted_exp = black.format_str(code_exp, mode=black.FileMode(line_length=10000))
 
-descs = ['Our zoo has three twenty giraffes, fourteen orangutans, 3 monkeys more than the number of giraffes we have and 12 zebras. Make color of giraffe bar yellow and orangutan bar green. Y-axis ranges from 10 to 400',
-         'Sales were at $100 on Monday and have increased by 30 dollars every day this week.',
-         'Create a bar chart with values 10, 3, twenty-five, and seventy sorted descending by value. X-axis should range from 0 to 100',
-         'DisneyLands FY17 earnings was at 20000. They have increased 15000 every year since. Make a horizontal bar graph'
+descs = ['Our zoo has twenty giraffes, fourteen gorillas, 3 monkeys more than the number of giraffes we have and 12 zebras.',
+         'Make y-axis range from 10 to 400',
+         'Change giraffes bar to 32',
+         'Update title to Hello world',
+         'Update y-axis title to number of animals'
+         # 'Create a bar chart with values 10, 3, twenty-five, and seventy sorted descending by value. X-axis should range from 0 to 100',
+         # 'DisneyLands FY17 earnings was at 20000. They have increased 15000 every year since. Make a horizontal bar graph'
          ]
 code_exps = ["""
-             px.bar(x=['giraffes', 'orangutans', 'monkeys', 'zebras'], y=[320, 14, 323, 12], labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue', 'blue'], color_discrete_map = 'identity', title='Our Zoo', text = [320, 14, 323, 12], range_y = [10, 400])
+             px.bar(x=['giraffes', 'gorillas', 'monkeys', 'zebras'], y=[20, 14, 23, 12], labels=dict(x='animals', y='count'), title='Our Zoo')
              """,
              """
-             px.bar(x=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], y=[100, 100 + 1 * 30, 100 + 2 * 30, 100 + 3 * 30, 100 + 4 * 30], labels=dict(x='Day', y='Dollars'), color = ['blue', 'blue', 'blue', 'blue', 'blue'], color_discrete_map = 'identity', title='Sales', text = [100, 100 + 1 * 30, 100 + 2 * 30, 100 + 3 * 30, 100 + 4 * 30])
+             update_layout(yaxis_range=[10, 400])
              """,
              """
-             px.bar(y=sorted([10, 3, 25, 70], reverse = True), color = ['blue', 'blue', 'blue', 'blue'], color_discrete_map = 'identity',  labels=dict(x='', y='Value', text = sorted([10, 3, 25, 70], reverse = True)), range_x = [0, 100])
+             update(data=[{'y' : [32, 14, 23, 12]}])
              """,
              """
-             px.bar(x = [20000, 20000 + 1 * 15000, 20000 + 2 * 15000, 20000 + 3 * 15000, 20000 + 4 * 15000], y=['FY17', 'FY18', 'FY19', 'FY20', 'FY21'], labels=dict(x='Earnings', y='FY'), orientation = 'h', title = 'Disneyland earnings', text = [20000, 20000 + 1 * 15000, 20000 + 2 * 15000, 20000 + 3 * 15000, 20000 + 4 * 15000])
+             update_layout(title='Hellow world')
+             """,
              """
+             update_yaxes(title = 'Number of animals')
+             """
+             # """
+             # px.bar(y=sorted([10, 3, 25, 70], reverse = True), color = ['blue', 'blue', 'blue', 'blue'], color_discrete_map = 'identity',  labels=dict(x='', y='Value', text = sorted([10, 3, 25, 70], reverse = True)), range_x = [0, 100])
+             # """,
+             # """
+             # px.bar(x = [20000, 20000 + 1 * 15000, 20000 + 2 * 15000, 20000 + 3 * 15000, 20000 + 4 * 15000], y=['FY17', 'FY18', 'FY19', 'FY20', 'FY21'], labels=dict(x='Earnings', y='FY'), orientation = 'h', title = 'Disneyland earnings', text = [20000, 20000 + 1 * 15000, 20000 + 2 * 15000, 20000 + 3 * 15000, 20000 + 4 * 15000])
+             # """
              ]
-# code_exps = ["""
-#              df = pd.DataFrame()
-#              df['animals'] = ['giraffes', 'orangutans', 'monkeys', 'zebras']
-#              df['count'] = [320, 14, 23, 12]
-#              fig = px.bar(data_frame = df, x='animals', y='count', labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue', 'blue'], color_discrete_map = 'identity', title='Our Zoo')
-#              """,
-#              """
-#              df = pd.DataFrame()
-#              df['Day'] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-#              df['Dollars'] = [100, 130, 160, 190, 220]
-             
-#              fig = px.bar(data_frame = df, x='Day', y='Dollars', labels=dict(x='Day', y='Dollars'), title='Sales')
-#              """,
-#              """
-#              df = pd.DataFrame()
-#              df['Value'] = [3, 10, 20, 25, 60, 70]
-             
-#              fig = px.bar(data_frame = df, y='Value', labels=dict(x='', y='Value'))
-#              """,
-#              """
-#              df = pd.DataFrame()
-#              df['Value'] = [10, 20, 60, 3, 25, 70]
-             
-#              df.sort_values('Value', ascending = False, inplace = True)
-#              fig = px.bar(data_frame = df, y='Value', labels=dict(x='', y='Value'))
-             
-#              """,
-#              "px.bar(y=['giraffes', 'orangutans', 'monkeys', 'zebras'], x=[320, 14, 23, 12], labels=dict(x='animals', y='count'), color = ['yellow', 'green', 'blue', 'blue'], color_discrete_map = 'identity', orientation = 'h', title='Our Zoo')",
-#              """
-#              df = pd.DataFrame()
-#              df['animals'] = ['giraffes', 'orangutans', 'monkeys', 'zebras']
-#              df['count'] = [320, 14, 23, 12]
-#              df['colors'] = ['yellow', 'green', 'blue', 'blue']
-             
-#              px.bar(y='animals', x='count', labels=dict(x='animals', y='count'), color = 'colors', color_discrete_map = 'identity', orientation = 'h', title='Our Zoo')
-#              """,
-#              """
-#              df = pd.DataFrame()
-#              df['animals'] = ['giraffes', 'orangutans', 'monkeys', 'zebras']
-#              df['count'] = [320, 14, 23, 12]
-#              df['colors'] = ['yellow', 'green', 'blue', 'blue']
-             
-#              px.bar(y='animals', x='count', labels=dict(x='animals', y='count'), color = 'colors', color_discrete_map = 'identity', orientation = 'v', title='Our Zoo')
-#              """]
 
-# formatted_exps = [black.format_str(code, mode=black.FileMode(line_length=10000)) for code in code_exps]
+formatted_exps = [black.format_str(code, mode=black.FileMode(line_length=10000)) for code in code_exps]
 
 # Create
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -145,6 +93,8 @@ output_graph = [
 ]
 output_code = [
     dbc.CardHeader("GPT-3 Generated Code"),
+    dbc.CardBody(
+        dbc.Spinner(dcc.Markdown("", id = "conversation-id")), style={"height" : "725px"}),
     dcc.Markdown(id="output-code", style={"margin": "50px 5px"}),
 ]
 
@@ -187,43 +137,51 @@ app.layout = dbc.Container(
 @app.callback(
     [Output("output-graph", "figure"), Output("output-code", "children")],
     [Input("button-submit", "n_clicks"), Input("input-text", "n_submit")],
-    [State("input-text", "value")],
+    [State("input-text", "value"), State("conversation-id", "children"), State("output-code", "children")],
 )
-def generate_graph(n_clicks, n_submit, text):
+def generate_graph(n_clicks, n_submit, text, conversation, output_code):
     if text is None:
         return dash.no_update, dash.no_update
+    
+    conversation += dedent(f"""
+                           description: {text}
+                           code: 
+                           """)
 
     prompt = dedent(
-        # f"""
-        # description: {desc}
-        # code:
-        # {code_exp}
-
-        # description: {text}
-        # code:
-        # """
-        '\n'.join([f'description: {desc}\ncode:\n{code}\n' for desc, code in zip(descs, code_exps)]) + f'description: {text}\ncode: '
+        '\n'.join([f'description: {desc}\ncode:\n{code}\n' for desc, code in zip(descs, formatted_exps)])
     ).strip("\n")
 
     response = openai.Completion.create(
         engine="davinci",
-        prompt=prompt,
+        prompt=prompt + conversation,
         max_tokens=1000,
         stop=["description:", "code:"],
         temperature=0
     )
     output = response.choices[0].text.strip()
-
-    code = f"import plotly.express as px\nfig={output}\nfig.show()"
+    
+    conversation += f'{output}\n'
+    
+    if output_code is None:
+        
+        output_code = f'{output}'
+        
+    else:
+    
+        output_code += f'.{output}'
+        
+    code = f"import plotly.express as px\nfig={output_code}\nfig.show()"
     formatted = black.format_str(code, mode=black.FileMode(line_length=10000))
 
     try:
-        fig = eval(output).update_layout(margin=dict(l=35, r=35, t=35, b=35))
+        fig = eval(output_code).update_layout(margin=dict(l=35, r=35, t=35, b=35))
     except Exception as e:
         fig = px.line(title=f"Exception: {e}. Please try again!")
         print(f'{formatted}')
+        print(f'{e}')
 
-    return fig, f"```\n{formatted}\n```"
+    return fig, output_code
 
 
 if __name__ == "__main__":
